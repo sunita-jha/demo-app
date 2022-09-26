@@ -46,4 +46,4 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
-          az containerapp update -n containerdemo -g myDevRG  --image $(containerRegistry)/$(imageRepository):$(tag) --container-name sunicontainer1
+          az containerapp update -n sunidemo -g myDevRG  --image $(containerRegistry)/$(imageRepository):$(tag) --container-name sunicontainer1
