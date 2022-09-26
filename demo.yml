@@ -2,8 +2,9 @@
 # Build and push an image to Azure Container Registry
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
-trigger:
-- main
+#trigger:
+
+#- main
 
 
 resources:
@@ -12,7 +13,7 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '33f38af7-5d2a-46b9-aebe-0b1154fad6b2'
-  imageRepository: 'sunitajha'
+  imageRepository: 'sunitajha1'
   containerRegistry: 'sunitademo.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
@@ -45,4 +46,4 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
-          az containerapp update -n containerdemo -g myDevRG  --image $(containerRegistry)/$(imageRepository):$(tag) --container-name sunicontainer
+          az containerapp update -n containerdemo -g myDevRG  --image $(containerRegistry)/$(imageRepository):$(tag) --container-name sunicontainer1
