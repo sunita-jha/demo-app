@@ -11,7 +11,7 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '33f38af7-5d2a-46b9-aebe-0b1154fad6b2'
-  imageRepository: 'sunitajhademoapp'
+  imageRepository: 'sunitajha'
   containerRegistry: 'sunitademo.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
@@ -37,8 +37,11 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-    - task: ContainerBuild@0
+    - task: AzureCLI@2
       inputs:
-       dockerRegistryServiceConnection: 'sunitademo'
-       repository: 'demoapp1'
-       Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+        azureSubscription: 'Free Trial(31964d13-7bf0-41e4-b3f3-f2e178069b29)'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt
+          az containerapp update -n containerdemo -g myDevRG  --image $(containerRegistry)/$(imageRepository):$(tag) --container-name sunicontainer
