@@ -37,3 +37,8 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+    - task: ContainerBuild@0
+      inputs:
+       dockerRegistryServiceConnection: 'sunitademo'
+       repository: 'demoapp1'
+       Dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
