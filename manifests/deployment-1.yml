@@ -1,19 +1,19 @@
 apiVersion : apps/v1
 kind: Deployment
 metadata:
-  name: "appdemo"
+  name: "demoapp"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "appdemo"
+      app: "demoapp"
   template:
     metadata:
       labels:
-        app: "appdemo"
+        app: "demoapp"
     spec:
       containers:
-        - name: "appdemo"
-          image: "myregistrydemo1.azurecr.io/appdemo"
+        - name: "demoapp"
+          image: "myregistrydemo1.azurecr.io/demoapp"
           ports:
-          - containerPort: 8080
+          - containerPort: 8000
