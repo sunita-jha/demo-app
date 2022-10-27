@@ -74,5 +74,5 @@ stages:
           kubernetesServiceConnection: 'kubernetesdemo'
           namespace: 'default'
           manifests: |
-                $(Pipeline.Workspace)/manifests/deployment1.yml
-                $(Pipeline.Workspace)/manifests/service1.yml
+                $(Pipeline.Workspace)/manifests/deployment-1.yml
+                $(Pipeline.Workspace)/manifests/service-1.yml
