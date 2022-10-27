@@ -10,10 +10,10 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '33f38af7-5d2a-46b9-aebe-0b1154fad6b2'
-  imageRepository: 'sunitajha'
-  containerRegistry: 'sunitademo.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
+  dockerRegistryServiceConnection: 'myregistrydemo1'
+  imageRepository: 'demoapp'
+  containerRegistry: 'myregistrydemo1.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/app/Dockerfile'
   tag: '$(Build.BuildId)'
 
   # Agent VM image name
@@ -37,11 +37,42 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-    - task: AzureCLI@2
+          latest
+    - task: PublishPipelineArtifact@1
       inputs:
-        azureSubscription: 'Free Trial(31964d13-7bf0-41e4-b3f3-f2e178069b29)'
-        scriptType: 'bash'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          az config set extension.use_dynamic_install=yes_without_prompt
-          az containerapp update -n containerdemo -g myDevRG  --image $(containerRegistry)/$(imageRepository):$(tag) --container-name sunicontainer
+        targetPath: '$(Pipeline.Workspace)/s/kubernetes'
+        artifact: 'manifests'
+        publishLocation: 'pipeline'
+- stage: Deploy
+  displayName: Deploy to dev
+  dependsOn: Build
+  variables:
+    acrsecret: k8examplesacrauth
+  jobs:
+    - job: Deploy
+      displayName: Deploy to AKS
+      pool:
+        vmImage: $(vmImageName)
+      steps:
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: 'manifests'
+          targetPath: '$(Pipeline.Workspace)/manifests'
+      - task: KubernetesManifest@0
+        inputs:
+          action: 'createSecret'
+          kubernetesServiceConnection: 'kubernetesdemo'
+          namespace: 'default'
+          secretType: 'dockerRegistry'
+          secretName: '$(acrsecret)'
+          dockerRegistryEndpoint: 'myregistrydemo1'
+
+      - task: KubernetesManifest@0
+        inputs:
+          action: 'deploy'
+          kubernetesServiceConnection: 'kubernetesdemo'
+          namespace: 'default'
+          manifests: |
+                $(Pipeline.Workspace)/manifests/deployment1.yml
+                $(Pipeline.Workspace)/manifests/service1.yml
