@@ -1,19 +1,19 @@
 apiVersion : apps/v1
 kind: Deployment
 metadata:
-  name: "aksdemojagord-8bce"
+  name: "appdemo"
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: "aksdemojagord-8bce"
+      app: "appdemo"
   template:
     metadata:
       labels:
-        app: "aksdemojagord-8bce"
+        app: "appdemo"
     spec:
       containers:
-        - name: "aksdemojagord-8bce"
-          image: "acrjagord.azurecr.io/aksdemojagord"
+        - name: "appdemo"
+          image: "myregistrydemo1.azurecr.io/appdemo"
           ports:
           - containerPort: 8080
